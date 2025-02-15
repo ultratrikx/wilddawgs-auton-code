@@ -24,21 +24,21 @@ pros::ADIDigitalOut doinker('G');
 pros::ADIEncoder arm_encoder('A', 'B', false);
 
 // input curve for throttle input during driver control
-lemlib::ExpoDriveCurve throttle_curve(3, // joystick deadband out of 127
+lemlib::ExpoDriveCurve throttle_curve(2, // joystick deadband out of 127
                                      10, // minimum output where drivetrain will move out of 127
                                      1.019 // expo curve gain
 );
 
 // input curve for steer input during driver control
-lemlib::ExpoDriveCurve steer_curve(3, // joystick deadband out of 127
+lemlib::ExpoDriveCurve steer_curve(2, // joystick deadband out of 127
                                   10, // minimum output where drivetrain will move out of 127
-                                  1.019 // expo curve gain
+                                  1.021 // expo curve gain
 );
 
 // lateral PID controller
-lemlib::ControllerSettings lateral_controller(0, // proportional gain (kP)
+lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              0, // derivative gain (kD)
+                                              25, // derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in inches
                                               0, // small error range timeout, in milliseconds
@@ -48,9 +48,9 @@ lemlib::ControllerSettings lateral_controller(0, // proportional gain (kP)
 );
 
 // angular PID controller
-lemlib::ControllerSettings angular_controller(20, // proportional gain (kP)
+lemlib::ControllerSettings angular_controller(21, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              126, // derivative gain (kD)
+                                              155,// derivative gain (kD)
                                               0, // anti windup
                                               0, // small error range, in degrees
                                               0, // small error range timeout, in milliseconds
