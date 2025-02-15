@@ -178,11 +178,24 @@ void competition_initialize() {}
 void autonomous()
 {
 	// Set the initial pose of the robot (x, y, heading)
-	chassis.setPose(-12, -12,-40); // Start position: 1 tile from right edge, facing backwards
+	// chassis.setPose(-12, -12,-40); // Start position: 1 tile from right edge, facing backwards
 
 
+	clamp.set_value(false);
+	arm.move(90);
+	pros::delay(1500);
+	arm.move(-90);
+	left_motors.move(-80);
+	
+	pros::delay(200);
+	clamp.set_value(true);
+	left_motors.move(-80);
+	pros::delay(50);
+	left_motors.move(80);
+	right_motors.move(80);
+	pros::delay(400);
 
-
+	chassis.setPose(12, -60,-40);
 
 	chassis.setPose(-12, -12,0); // Start position: 1 tile from right edge, facing backwards
 	// Move the robot backwards 44 inches
@@ -193,6 +206,8 @@ void autonomous()
 	clamp.set_value(true);
 	pros::delay(1500); // Wait 200ms
 	clamp.set_value(false);
+
+	
 	
 
 }
