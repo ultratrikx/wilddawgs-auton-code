@@ -171,35 +171,20 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-
-
-
-// void autonomous()
-// {
-// 	clamp.set_value(false);
-// 	arm.move(90);
-// 	pros::delay(1500);
-// 	arm.move(-90);
-// 	left_motors.move(-80);
-	
-// 	pros::delay(200);
-// 	clamp.set_value(true);
-// 	left_motors.move(-80);
-// 	pros::delay(50);
-// 	left_motors.move(80);
-// 	right_motors.move(80);
-// 	pros::delay(400);
-
-// }
-
 void autonomous()
 {
 	// Set the initial pose of the robot (x, y, heading)
-	chassis.setPose(-12, -12, 180); // Start position: 1 tile from right edge, facing backwards
+	chassis.setPose(-12, -12,0); // Start position: 1 tile from right edge, facing backwards
 	// Move the robot backwards 44 inches
-	chassis.moveToPoint(-44, 0, 4000); // Move backwards to (-44, 0) maintaining 0 degree heading
-	clamp.set_value(false);
+	chassis.moveToPoint(-12, -44, 2000, {.forwards = false}); 
+	// Move backwards to (-44, 0) maintaining 0 degree heading
+
+	pros::delay(1000); // pause for 1 second before activating clamp
+
+	// clamp.set_value(false);
 	clamp.set_value(true);
+	clamp.set_value(false);
+
 }
 
 
