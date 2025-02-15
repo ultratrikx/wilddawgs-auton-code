@@ -178,39 +178,108 @@ void competition_initialize() {}
 void autonomous()
 {
 	// Set the initial pose of the robot (x, y, heading)
-	// chassis.setPose(-12, -12,-40); // Start position: 1 tile from right edge, facing backwards
-
-
+	chassis.setPose(0, 0,-40); // Start position: 1 tile from right edge, facing backwards
+	
+	// Moves the arm only
 	clamp.set_value(false);
 	arm.move(90);
 	pros::delay(1500);
 	arm.move(-90);
-	left_motors.move(-80);
-	
-	pros::delay(200);
+	pros::delay(1000);
+	arm.move(0);
+
+	// left_motors.move(-80);
+	// right_motors.move(-80);
+
+
+	chassis.moveToPoint(1, -35, 3000, {.forwards = false});
+
+
+
+
+
+	// // Turn to 270 and move backwards to (24, 0)
+	// chassis.moveToPoint(-24,24, 1000, {.forwards = false});
+	// pros::delay(200);
+
+	// Clamp the mobile goal
 	clamp.set_value(true);
-	left_motors.move(-80);
-	pros::delay(50);
-	left_motors.move(80);
-	right_motors.move(80);
-	pros::delay(400);
-
-	chassis.setPose(12, -60,-40);
-
-	chassis.setPose(-12, -12,0); // Start position: 1 tile from right edge, facing backwards
-	// Move the robot backwards 44 inches
-	chassis.moveToPoint(-12, -44, 2000, {.forwards = false}); 
-	// Move backwards to (-44, 0) maintaining 0 degree heading	
-
-	// pros::delay(1000); // pause for 1 second before activating clamp
-	clamp.set_value(true);
-	pros::delay(1500); // Wait 200ms
+	pros::delay(2000);
 	clamp.set_value(false);
+	chassis.moveToPoint(1, -40, 2000, {.forwards = false});
 
-	
-	
+	// // Turn to 180 degrees and move forward to collect the ring
+	// chassis.moveToPoint(-24, -48, 1000);
+	// pros::delay(50);
 
+	// // Clamp the ring
+	// clamp.set_value(true);
+	// pros::delay(400);
+	// clamp.set_value(false);
+
+	// // Ram into the center
+	// chassis.moveToPoint(-24, 0, 1000);
+
+	// chassis.setPose(12, -60,-40);
+
+	// chassis.setPose(-12, -12,0); // Start position: 1 tile from right edge, facing backwards
+	// // Move the robot backwards 44 inches
+	// chassis.moveToPoint(-12, -44, 2000, {.forwards = false}); 
+	// // Move backwards to (-44, 0) maintaining 0 degree heading	
+
+	// // pros::delay(1000); // pause for 1 second before activating clamp
+	// clamp.set_value(true);
+	// pros::delay(1500); // Wait 200ms
+	// clamp.set_value(false);
 }
+// void autonomous()
+// {
+// 	// Set the initial pose of the robot (x, y, heading)
+// 	// chassis.setPose(-12, -12,-40); // Start position: 1 tile from right edge, facing backwards
+
+// 	// Moves the arm only
+// 	clamp.set_value(false);
+// 	arm.move(90);
+// 	pros::delay(1500);
+// 	arm.move(-90);
+// 	left_motors.move(-80);
+
+// 	// Turn to 270 and move backwards to (24, 0)
+// 	chassis.moveToPoint(-24,-24, 1000, {.forwards = false});
+// 	pros::delay(200);
+
+// 	// Clamp the mobile goal
+// 	clamp.set_value(true);
+// 	pros::delay(400);
+// 	clamp.set_value(false);
+
+// 	// Turn to 180 degrees and move forward to collect the ring
+// 	chassis.moveToPoint(-24, -48, 1000);
+// 	pros::delay(50);
+
+// 	// Clamp the ring
+// 	clamp.set_value(true);
+// 	pros::delay(400);
+// 	clamp.set_value(false);
+
+// 	// Ram into the center
+// 	chassis.moveToPoint(-24, 0, 1000);
+
+// 	// chassis.setPose(12, -60,-40);
+
+// 	// chassis.setPose(-12, -12,0); // Start position: 1 tile from right edge, facing backwards
+// 	// // Move the robot backwards 44 inches
+// 	// chassis.moveToPoint(-12, -44, 2000, {.forwards = false}); 
+// 	// // Move backwards to (-44, 0) maintaining 0 degree heading	
+
+// 	// // pros::delay(1000); // pause for 1 second before activating clamp
+// 	// clamp.set_value(true);
+// 	// pros::delay(1500); // Wait 200ms
+// 	// clamp.set_value(false);
+	
+	
+
+// }
 
 
 
