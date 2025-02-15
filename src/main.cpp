@@ -160,6 +160,10 @@ void disabled() {}
  */
 void competition_initialize() {}
 
+
+
+
+
 /**
  * Runs the user autonomous code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via
@@ -174,16 +178,22 @@ void competition_initialize() {}
 void autonomous()
 {
 	// Set the initial pose of the robot (x, y, heading)
+	chassis.setPose(-12, -12,-40); // Start position: 1 tile from right edge, facing backwards
+
+
+
+
+
 	chassis.setPose(-12, -12,0); // Start position: 1 tile from right edge, facing backwards
 	// Move the robot backwards 44 inches
 	chassis.moveToPoint(-12, -44, 2000, {.forwards = false}); 
-	// Move backwards to (-44, 0) maintaining 0 degree heading
+	// Move backwards to (-44, 0) maintaining 0 degree heading	
 
-	pros::delay(1000); // pause for 1 second before activating clamp
-
-	// clamp.set_value(false);
+	// pros::delay(1000); // pause for 1 second before activating clamp
 	clamp.set_value(true);
+	pros::delay(1500); // Wait 200ms
 	clamp.set_value(false);
+	
 
 }
 
@@ -341,13 +351,3 @@ void opcontrol()
 		pros::delay(20);
 	}
 }
-
-// DELETE LATER
-// int main()
-//{
-// Call the autonomous function for testing
-//	autonomous();
-
-// Start operator control (if needed)
-//	opcontrol();
-//}
