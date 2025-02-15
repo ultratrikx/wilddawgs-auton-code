@@ -206,7 +206,14 @@ void autonomous()
 	clamp.set_value(true);
 	pros::delay(2000);
 	clamp.set_value(false);
-	chassis.moveToPoint(1, -40, 2000, {.forwards = false});
+	chassis.moveToPoint(1, -45, 2000, {.forwards = false});
+
+
+	intake.move(127);
+	hook.move(-100);
+
+
+	chassis.moveToPoint(20, -41.5, 3000);
 
 	// // Turn to 180 degrees and move forward to collect the ring
 	// chassis.moveToPoint(-24, -48, 1000);
