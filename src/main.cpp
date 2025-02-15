@@ -6,7 +6,7 @@ pros::MotorGroup right_motors({1, 2, 3}, pros::MotorGearset::blue);		 // right m
 // drivetrain settings
 lemlib::Drivetrain drivetrain(&left_motors, // left motor group
                               &right_motors, // right motor group
-                              10, // 10 inch track width
+                              11.25, // 10 inch track width
                               lemlib::Omniwheel::NEW_275, // using new 4" omnis
                               450, // drivetrain rpm is 360
                               2 // horizontal drift is 2 (for now)
@@ -19,41 +19,59 @@ pros::Motor hook(-11);
 pros::Motor arm(5);
 
 
-
 pros::ADIDigitalOut clamp('H');
 pros::ADIDigitalOut doinker('G');
 pros::ADIEncoder arm_encoder('A', 'B', false);
 
-
-// lateral PID controller
-lemlib::ControllerSettings lateral_controller(10, // proportional gain (kP)
-                                              0, // integral gain (kI)
-                                              3, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in inches
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in inches
-                                              500, // large error range timeout, in milliseconds
-                                              20 // maximum acceleration (slew)
+// input curve for throttle input during driver control
+lemlib::ExpoDriveCurve throttle_curve(3, // joystick deadband out of 127
+                                     10, // minimum output where drivetrain will move out of 127
+                                     1.019 // expo curve gain
 );
 
-// angular PID controller
-lemlib::ControllerSettings angular_controller(2, // proportional gain (kP)
+// input curve for steer input during driver control
+lemlib::ExpoDriveCurve steer_curve(3, // joystick deadband out of 127
+                                  10, // minimum output where drivetrain will move out of 127
+                                  1.019 // expo curve gain
+);
+
+// lateral PID controller
+lemlib::ControllerSettings lateral_controller(0, // proportional gain (kP)
                                               0, // integral gain (kI)
-                                              10, // derivative gain (kD)
-                                              3, // anti windup
-                                              1, // small error range, in degrees
-                                              100, // small error range timeout, in milliseconds
-                                              3, // large error range, in degrees
-                                              500, // large error range timeout, in milliseconds
+                                              0, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in inches
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in inches
+                                              0, // large error range timeout, in milliseconds
                                               0 // maximum acceleration (slew)
 );
 
+// angular PID controller
+lemlib::ControllerSettings angular_controller(20, // proportional gain (kP)
+                                              0, // integral gain (kI)
+                                              126, // derivative gain (kD)
+                                              0, // anti windup
+                                              0, // small error range, in degrees
+                                              0, // small error range timeout, in milliseconds
+                                              0, // large error range, in degrees
+                                              0, // large error range timeout, in milliseconds
+                                              0 // maximum acceleration (slew)
+);
+
+lemlib::OdomSensors sensors(nullptr, // vertical tracking wheel 1, set to null
+							nullptr, // vertical tracking wheel 2, set to nullptr as we are using IMEs
+							nullptr, // horizontal tracking wheel 1
+							nullptr, // horizontal tracking wheel 2, set to nullptr as we don't have a second one
+							&imu); // inertial sensor
+
 // create the chassis
 lemlib::Chassis chassis(drivetrain, // drivetrain settings
-                        lateral_controller, // lateral PID settings
-                        angular_controller // angular PID settings
-                         // odometry sensors
+						lateral_controller, // lateral PID settings
+						angular_controller, // angular PID settings
+						sensors, // odometry sensors (left, middle, right)
+						&throttle_curve, 
+                        &steer_curve
 );
 
 /**
@@ -131,23 +149,37 @@ void competition_initialize() {}
 
 
 
+// void autonomous()
+// {
+// 	clamp.set_value(false);
+// 	arm.move(90);
+// 	pros::delay(1500);
+// 	arm.move(-90);
+// 	left_motors.move(-80);
+	
+// 	pros::delay(200);
+// 	clamp.set_value(true);
+// 	left_motors.move(-80);
+// 	pros::delay(50);
+// 	left_motors.move(80);
+// 	right_motors.move(80);
+// 	pros::delay(400);
+
+// }
+
 void autonomous()
 {
-	clamp.set_value(false);
-	arm.move(90);
-	pros::delay(1500);
-	arm.move(-90);
-	left_motors.move(-80);
-	
-	pros::delay(200);
-	clamp.set_value(true);
-	left_motors.move(-80);
-	pros::delay(50);
-	left_motors.move(80);
-	right_motors.move(80);
-	pros::delay(400);
+	// set position to x:0, y:0, heading:0
+    chassis.setPose(0, 0, 0);
+    // turn to face heading 90 with a very long timeout
+    chassis.turnToHeading(90, 100000);
 
 }
+
+
+
+
+
 
 /**
  * Runs the operator control code. This function will be started in its own task
@@ -192,7 +224,7 @@ void opcontrol()
         int rightX = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 
         // move the robot
-        chassis.arcade(leftY, rightX);
+        chassis.curvature(leftY, rightX);
 
 		// Intake control with L1 (forward) and L2 (reverse)
 		if (controller.get_digital(DIGITAL_R1))
