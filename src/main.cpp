@@ -187,7 +187,6 @@ void autonomous()
 	arm.move(-90);
 	pros::delay(1000);
 	arm.move(0);
-`
 	// left_motors.move(-80);
 	// right_motors.move(-80);
 
@@ -204,9 +203,11 @@ void autonomous()
 
 	// Clamp the mobile goal
 	clamp.set_value(true);
-	pros::delay(2000);
+	pros::delay(1500);
 	clamp.set_value(false);
-	chassis.moveToPoint(1, -45, 2000, {.forwards = false});
+	chassis.moveToPoint(1, -47, 2000, {.forwards = false});
+	chassis.moveToPoint(1, -41, 500);
+	chassis.moveToPoint(1, -46.5, 500, {.forwards = false});
 
 
 	intake.move(127);
@@ -214,6 +215,9 @@ void autonomous()
 
 
 	chassis.moveToPoint(20, -41.5, 3000);
+	chassis.moveToPoint(20, -57, 3000);
+	chassis.moveToPoint(25, -57, 3000);
+	
 
 	// // Turn to 180 degrees and move forward to collect the ring
 	// chassis.moveToPoint(-24, -48, 1000);
